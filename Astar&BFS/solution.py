@@ -10,25 +10,25 @@ class Graph:
         self.h_distance = []
 
         # Already given data - kept unchanged
-        self.graph = {
-            'A': [('B', 2), ('C', 4)],
-            'B': [('D', 3), ('E', 5)],
-            'C': [('F', 4)],
-            'D': [('G', 2)],
-            'E': [('G', 3)],
-            'F': [('G', 2)],
-            'G': []
-        }
+        # self.graph = {
+        #     'A': [('B', 2), ('C', 4)],
+        #     'B': [('D', 3), ('E', 5)],
+        #     'C': [('F', 4)],
+        #     'D': [('G', 2)],
+        #     'E': [('G', 3)],
+        #     'F': [('G', 2)],
+        #     'G': []
+        # }
 
-        self.h_distance = {
-            'A': 7,
-            'B': 5,
-            'C': 4,
-            'D': 2,
-            'E': 3,
-            'F': 2,
-            'G': 0
-        }
+        # self.h_distance = {
+        #     'A': 7,
+        #     'B': 5,
+        #     'C': 4,
+        #     'D': 2,
+        #     'E': 3,
+        #     'F': 2,
+        #     'G': 0
+        # }
 
 
     def getInput(self):
@@ -85,57 +85,46 @@ class Graph:
         print()
 
 
-    def a_Star(self, start_node, goal_node):
+    def a_star(self,start,goal):
+    
+        open_list=[]
+        close_list=[]
+        parent={}
+        path=[]
+        g={start:0}
 
-        open_list = []
-        close_list = []
+        h=self.h_distance[start]
 
-        g = {start_node: 0}
+        f=h+g[start]
+        heapq.heappush(open_list,(f,start))
+        while len(open_list)!=0:
 
-        h = self.h_distance[start_node]
-        f = g[start_node] + h
+            f,curr_node=heapq.heappop(open_list)
+            close_list.append(curr_node)
 
-        heapq.heappush(open_list, (f, start_node))
+            if curr_node==goal:
+                current=goal
+                while current!=start:   
+                    path.append(current)
+                    current=parent[current]
+                path.append(start)
+                path.reverse()
+                print(f"The goal is found, the minimum distance is {f}")
+                print(f"Path:","->".join(path))
+                return
 
-        while len(open_list) != 0:
+            for child_node,dist in self.graph[curr_node]:
+                new_g=g[curr_node]+dist
+                h=self.h_distance[child_node]
+                f=new_g+h
 
-            f, curr_node = heapq.heappop(open_list)
-
-            if curr_node == goal_node:
-
-                print(
-                    f"Goal foud, Closest distance is {f}"
-                )
-
-                break
-
-            heapq.heappush(close_list, curr_node)
-
-            for child_node, dist in self.graph[curr_node]:
-
-                new_g = dist + g[curr_node]
-
-                h = self.h_distance[child_node]
-
-                f = new_g + h
-
-                print(g)
-
-                if child_node not in g or new_g < g[child_node]:
-
-                    g[child_node] = new_g
-
-                    h = self.h_distance[child_node]
-
-                    f = new_g + h
-
-                    heapq.heappush(
-                        open_list,
-                        (f, child_node)
-                    )
+                if child_node not in g or new_g<g[child_node]:
+                    g[child_node]=new_g
+                    heapq.heappush(open_list,(f,child_node))
+                    parent[child_node]=curr_node
 
 
-    def best_first_search(graph, heuristic, start, goal):
+    def best_first_search(self,graph, heuristic, start, goal):
 
         open_list = []
         closed_list = []
@@ -186,44 +175,35 @@ while True:
 
 
     print("\n========== AI SEARCH ALGORITHMS ==========")
-    print("1. Display Graph")
-    print("2. A* Search")
-    print("3. Best First Search")
-    print("4. Exit")
+    print("1. Give graph info")
+    print("2. Display Graph")
+    print("3. A* Search")
+    print("4. Best First Search")
+    print("5. Exit")
     print("==========================================")
 
     choice = input("Enter your choice: ")
-
-    if choice == "1":
-
-        g.Display()
-
-    elif choice == "2":
-
-        start = input("Enter start node: ").upper()
-        goal = input("Enter goal node: ").upper()
-
-        g.a_Star(start, goal)
-
-    elif choice == "3":
-
-        start = input("Enter start node: ").upper()
-        goal = input("Enter goal node: ").upper()
-
-        # Your original function is kept unchanged.
-        g.best_first_search(
-            g.graph,
-            g.h_distance,
-            start,
-            goal
-        )
-
-    elif choice == "4":
-
-        print("Program ended.")
-        break
-
-    else:
-
-        print("Invalid choice!")
+    match choice:
+        
+        case 1:
+            g.getInput()
+        case 2:
+            g.Display()
+        case 3:
+            start = input("Enter start node: ").upper()
+            goal = input("Enter goal node: ").upper()
+        
+            g.a_star(start, goal)
+            
+        case 4:
+            start = input("Enter start node: ").upper()
+            goal = input("Enter goal node: ").upper()
+            
+                    # Your original function is kept unchanged.
+            g.best_first_search(g.graph,g.h_distance,start,goal)
+        case 5:
+            print("Program ended.")
+            break
+        case _:
+            print("Invalid choice! Press again.")
     
