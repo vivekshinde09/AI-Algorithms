@@ -160,7 +160,7 @@ class Graph:
                         (h, child)
                     )
 
-    print("Goal not found!")
+        print("Goal not found!")
     
 
 # ---------------------------------------
