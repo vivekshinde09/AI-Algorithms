@@ -7,7 +7,7 @@ class Graph:
         self.graph = {}
         self.nodes = 0
         self.distance = []
-        self.h_distance = []
+        self.h_distance = {}
 
         # Already given data - kept unchanged
         # self.graph = {
@@ -34,12 +34,12 @@ class Graph:
     def getInput(self):
 
         self.nodes = int(input("Enter number of nodes present in graph:"))
-
+        print('\n')
         for i in range(self.nodes):
 
-            node = input("Enter the source node:")
+            node = input("Enter the Parent node:")
 
-            self.h_distance.append(
+            self.h_distance[node]=int(
                 input(f"Enter the heuristic distance of node {node} :")
             )
 
@@ -60,10 +60,11 @@ class Graph:
                 info.append(
                     int(input("Enter the distance :"))
                 )
-
                 child_nodes.append(info)
+                print('\n')
 
             self.graph[node] = child_nodes
+            
 
         self.distance = [99 for i in range(self.nodes)]
         self.distance[0] = 0
@@ -175,35 +176,44 @@ while True:
 
 
     print("\n========== AI SEARCH ALGORITHMS ==========")
-    print("1. Give graph info")
+    print("1. Get Input")
     print("2. Display Graph")
     print("3. A* Search")
     print("4. Best First Search")
     print("5. Exit")
     print("==========================================")
 
-    choice = input("Enter your choice: ")
+    choice = int(input("Enter your choice: "))
+
+    
     match choice:
         
         case 1:
             g.getInput()
+            
         case 2:
             g.Display()
+            
         case 3:
             start = input("Enter start node: ").upper()
             goal = input("Enter goal node: ").upper()
-        
+    
             g.a_star(start, goal)
             
         case 4:
             start = input("Enter start node: ").upper()
             goal = input("Enter goal node: ").upper()
-            
-                    # Your original function is kept unchanged.
-            g.best_first_search(g.graph,g.h_distance,start,goal)
+    
+            # Your original function is kept unchanged.
+            g.best_first_search(
+                g.graph,
+                g.h_distance,
+                start,
+                goal
+            )
         case 5:
-            print("Program ended.")
+            print("Exit")
             break
         case _:
-            print("Invalid choice! Press again.")
-    
+            print("Invalid Choice, Give valid choice")
+        
